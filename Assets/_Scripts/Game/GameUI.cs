@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using static SceneNames;
 
 
-public class GameUI : MonoBehaviour
+public class GameUI : MonoBehaviour, IChangeOrientation
 {
 
     [field: SerializeField]
@@ -13,21 +13,33 @@ public class GameUI : MonoBehaviour
     [field: SerializeField]
     public RectTransform LandscapeUI { get; set; }
 
-
     public void LoadMainMenu()
     {
         SceneManager.LoadScene(SCENE_MAINMENU);
     }
 
-    public void TurnPortaitUIOn()
+    private void TurnPortaitUIOn()
     {
         LandscapeUI.gameObject.SetActive(false);
         PortaitUI.gameObject.SetActive(true);
     }
 
-    public void TurnLandscapeUIOn()
+    private void TurnLandscapeUIOn()
     {
         PortaitUI.gameObject.SetActive(false);
         LandscapeUI.gameObject.SetActive(true);
+    }
+
+    public void ChangeOrientation(Orientation orientation)
+    {
+        switch (orientation)
+        {
+            case Orientation.Portrait:
+                TurnPortaitUIOn();
+                break;
+            case Orientation.Landscape:
+                TurnLandscapeUIOn();
+                break;
+        }
     }
 }

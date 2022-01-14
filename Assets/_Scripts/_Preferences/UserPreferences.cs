@@ -3,27 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using static SettingsStrings;
 
-public class UserPreferences : MonoBehaviour
+public static class UserPreferences
 {
 
-    // 0 = portrait mode, >0 = landscape mode
-    // true = portrait, false = lanscape
-    public bool GetPortraitMode()
+    public static Orientation GetOrientation()
     {
-        if (PlayerPrefs.GetInt(KEY_ORIENTATION, 0) == 0)
-            return true;
-        else
-            return false;
+        return (Orientation) PlayerPrefs.GetInt(KEY_ORIENTATION, (int)Orientation.Portrait);
     }
 
 
-    public void SetPortraitModeOn()
+    public static void SetPortraitModeOn()
     {
-        PlayerPrefs.SetInt(KEY_ORIENTATION, 0);
+        PlayerPrefs.SetInt(KEY_ORIENTATION, (int)Orientation.Portrait);
     }
 
-    public void SetLandscapeModeOn()
+    public static void SetLandscapeModeOn()
     {
-        PlayerPrefs.SetInt(KEY_ORIENTATION, 1);
+        PlayerPrefs.SetInt(KEY_ORIENTATION, (int)Orientation.Landscape);
     }
 }

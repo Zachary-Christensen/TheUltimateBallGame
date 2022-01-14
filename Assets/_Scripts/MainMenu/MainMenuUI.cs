@@ -13,23 +13,29 @@ public class MainMenuUI : MonoBehaviour
     public Toggle TglOrientation { get; set; }
     [field: SerializeField]
     public Text TxtTglOrientation { get; set; }
-    private UserPreferences UserPreferences { get; set; }
 
 
     private void Start()
     {
-        UserPreferences = GetComponent<UserPreferences>();
+        /* 
+         * If screen is not reset to portrait mode, then odd behaviour occurs when switching between orientations and scenes
+         */
+        MyTools.SetScreenToOrientation(Orientation.Portrait);
 
-        if (UserPreferences.GetPortraitMode())
+        switch (UserPreferences.GetOrientation())
         {
-            TglOrientation.isOn = true;
-            TurnOnPortraitMode();
+            case Orientation.Portrait:
+                TglOrientation.isOn = true;
+                TurnOnPortraitMode();
+                break;
+            case Orientation.Landscape:
+                TglOrientation.isOn = false;
+                TurnOnLandscapeMode();
+                break;
+            default:
+                break;
         }
-        else
-        {
-            TglOrientation.isOn = false;
-            TurnOnLandscapeMode();
-        }
+
     }
 
     public void CenterPlayButton()

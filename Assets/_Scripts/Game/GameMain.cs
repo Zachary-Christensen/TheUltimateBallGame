@@ -1,68 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static PrefabPaths;
 
 public class GameMain : MonoBehaviour
 {
-    private Camera MainCamera { get; set; }
-    private UserPreferences UserPreferences { get; set; }
     private GameObject Background { get; set; }
-    private GameUI GameUI { get; set; }
+    [field: SerializeField]
+    private GameUI GameUI { get; set; } // reference from editor
 
     private void Awake()
     {
+        OmniFac omniFac = ScriptableObject.CreateInstance<OmniFac>();
+        omniFac.Inject(transform, GameUI);
 
-        MainCamera = Camera.main;
-        UserPreferences = GetComponent<UserPreferences>();
-        GameUI = GetComponent<GameUI>();
-        Background = Instantiate(Resources.Load<GameObject>(BACKGROUND_PREFAB));
+        // change orientation of screen on mobile phones to setting set from main menu
+        MyTools.SetScreenToOrientation(UserPreferences.GetOrientation());
 
-        if (UserPreferences.GetPortraitMode()) // portrait mode on
-        {
-            SetOrientationPortrait();
-        }
-        else // landscape mode on
-        {
-            SetOrientationLandscape();
-        }
-
-
+        StateMachineGame stateMachineGame = GetComponent<StateMachineGame>();
+        stateMachineGame.Inject(GameUI, omniFac);
+        stateMachineGame.Play();
     }
 
-    private void SetOrientationLandscape()
-    {
-        Screen.orientation = ScreenOrientation.Landscape;
-        Background.transform.localScale = Vector3.one * MainCamera.orthographicSize * 2f; // Vector3.one * height
-
-        GameUI.TurnLandscapeUIOn();
-    }
-
-    public void SetOrientationPortrait()
-    {
-        Screen.orientation = ScreenOrientation.Portrait;
-        Background.transform.localScale = Vector3.one * MainCamera.orthographicSize * 2f * Screen.width / Screen.height; // Vector3.one * width
-
-        GameUI.TurnPortaitUIOn();
-    }
-
-    void Update()
-    {
-        
-
-
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SetOrientationPortrait();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SetOrientationLandscape();
-        }
-
-
-
-
-    }
 }
